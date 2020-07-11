@@ -14,21 +14,25 @@ if (!empty($email) || !empty($password)){
     $stmt->bindParam(1, $email);
     $stmt->execute();
     $userData = $stmt->fetch(PDO::FETCH_ASSOC);
-    $pwdCheck = password_verify($password,$userData['password']);
-    if ($pwdCheck === true)
+    if (is_array($userData) > 0){
+        $pwdCheck = password_verify($password,$userData['password']);
+        if ($pwdCheck === true)
+        {
+            session_start();
+            $_SESSION['logged_in'] = true;
+            $_SESSION['id'] = $userData['id'];
+            $response->message("Başarıyla giriş yapıldı.", 200);
+        }
+        else
+        {
+            $response->message("Sifre hatali", 401);
+        }
+    }else
     {
-        session_start();
-        $_SESSION['logged_in'] = true;
-        $_SESSION['id'] = $userData['id'];
-        $_SESSION['name'] = $userData['name'];
-        $_SESSION['email'] = $userData['email'];
-        $response->message("Başarılı", 200);
+        $response->message("Kullanıcı bulunamadı", 401);
     }
-    else
-    {
-        $response->message("Şifre hatalı", 401);
-        exit();
-    }
+
+
 }
 
 ?>
