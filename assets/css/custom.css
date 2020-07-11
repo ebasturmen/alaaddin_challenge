@@ -1,0 +1,46 @@
+html, body {
+    height: 100%;
+    margin: 0;
+}
+
+.discount-code-box {
+    margin: 14px 0;
+    background: #f3f3f3;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.08);
+    height: max-content;
+    padding: 20px 18px;
+}
+
+.discount-code-company img {
+    width: auto;
+    height: 80px;
+    border: 1px solid #d7d7d7;
+}
+
+.discount-code-title {
+    text-align:center;
+}
+
+.discount-code-title h4{
+    margin: 12px 0;
+}
+
+.discount-code-button button {
+    float: right;
+    margin: 16px 0;
+}
+
+.bd-placeholder-img {
+    font-size: 1.125rem;
+    text-anchor: middle;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+@media (min-width: 768px) {
+    .bd-placeholder-img-lg {
+        font-size: 3.5rem;
+    }
+}
