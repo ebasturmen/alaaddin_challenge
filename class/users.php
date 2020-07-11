@@ -1,12 +1,9 @@
 <?php
 class User{
-
     // Connection
     private $conn;
-
     // Table
     private $db_table = "users";
-
     // Columns
     public $id;
     public $name;
@@ -15,12 +12,18 @@ class User{
     public $email;
     public $password;
 
-    // Db connection
+    /**
+     * User constructor.
+     * @param $db
+     */
     public function __construct($db){
         $this->conn = $db;
     }
 
-    // GET ALL
+    /**
+     * GEL ALL USERS
+     * @return mixed
+     */
     public function getUsers(){
         $sqlQuery = "SELECT * FROM " . $this->db_table;
         $stmt = $this->conn->prepare($sqlQuery);
@@ -28,10 +31,12 @@ class User{
         return $stmt;
     }
 
-    // CREATE
+    /**
+     * CREATE USER
+     * @return bool
+     */
     public function createUser(){
         $sqlQuery = "INSERT INTO ". $this->db_table ." SET name = :name, surname = :surname, phone = :phone, email = :email, password = :password";
-
         $stmt = $this->conn->prepare($sqlQuery);
 
         // sanitize
@@ -40,14 +45,14 @@ class User{
         $this->phone=htmlspecialchars(strip_tags($this->phone));
         $this->email=htmlspecialchars(strip_tags($this->email));
         $this->password=htmlspecialchars(strip_tags($this->password));
+        $this->password=  password_hash($this->password, PASSWORD_DEFAULT);
 
         // bind data
         $stmt->bindParam(":name", $this->name);
         $stmt->bindParam(":surname", $this->surname);
         $stmt->bindParam(":phone", $this->phone);
         $stmt->bindParam(":email", $this->email);
-        $stmt->bindParam(":password", password_hash($this->password, PASSWORD_DEFAULT));
-
+        $stmt->bindParam(":password", $this->password);
 
         if($stmt->execute()){
             return true;
@@ -55,25 +60,28 @@ class User{
         return false;
     }
 
-    // READ single
+    /**
+     * GET SINGLE USER INFO
+     */
     public function getSingleUser(){
         $sqlQuery = "SELECT *  FROM ". $this->db_table ." WHERE id = ? LIMIT 0,1";
-
         $stmt = $this->conn->prepare($sqlQuery);
-
         $stmt->bindParam(1, $this->id);
-
         $stmt->execute();
-
         $dataRow = $stmt->fetch(PDO::FETCH_ASSOC);
-
-        $this->name = $dataRow['name'];
-        $this->surname = $dataRow['surname'];
-        $this->phone = $dataRow['phone'];
-        $this->email = $dataRow['email'];
+        if (!empty($dataRow))
+        {
+            $this->name = $dataRow['name'];
+            $this->surname = $dataRow['surname'];
+            $this->phone = $dataRow['phone'];
+            $this->email = $dataRow['email'];
+        }
     }
 
-    // UPDATE
+    /**
+     * UPDATE USER WITH ID
+     * @return bool
+     */
     public function updateUser(){
         $sqlQuery = "UPDATE " . $this->db_table . " SET name = :name, surname = :surname, phone = :phone WHERE id = :id";
 
@@ -96,7 +104,10 @@ class User{
         return false;
     }
 
-    // DELETE
+    /**
+     * DELETE USER WITH ID
+     * @return bool
+     */
     function deleteUser(){
         $sqlQuery = "DELETE FROM " . $this->db_table . " WHERE id = ?";
         $stmt = $this->conn->prepare($sqlQuery);
@@ -110,6 +121,5 @@ class User{
         }
         return false;
     }
-
 }
 ?>
