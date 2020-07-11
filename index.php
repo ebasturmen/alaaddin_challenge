@@ -1,3 +1,7 @@
+<?php
+/*$coupons = $abc->getCoupons();*/
+    session_start();
+?>
 <!doctype html>
 <html lang="en">
 <head>
@@ -27,16 +31,31 @@
                     <a class="nav-link" href="#">Anasayfa <span class="sr-only">(current)</span></a>
                 </li>
             </ul>
+
+
+
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         Kullanıcı
                     </a>
-                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <a class="dropdown-item" href="sign-in.php">Kullanıcı Giriş</a>
-                        <a class="dropdown-item" href="sign-up.php">Kullanıcı Kayıt</a>
-                    </div>
+                    <?php
+
+                    if(isset($_SESSION['logged_in']))
+                    { ?>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item" href="sign-in.php">Kullanıcı Çıkış</a>
+                        </div>
+                    <?php }
+                    else
+                    { ?>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item" href="sign-in.php">Kullanıcı Giriş</a>
+                            <a class="dropdown-item" href="sign-up.php">Kullanıcı Kayıt</a>
+                        </div>
+                    <?php } ?>
+
                 </li>
             </ul>
         </div>
