@@ -1,4 +1,5 @@
 <?php
+
 class Database {
     private $host = "localhost";
     private $database_name = "challenge";
@@ -18,4 +19,8 @@ class Database {
         return $this->conn;
     }
 }
+
+$connection = new Database();
+$db = $connection->getConnection();
+
 ?>

@@ -7,24 +7,27 @@ header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers
 
 include_once '../config/database.php';
 include_once '../class/users.php';
+include_once '../class/Response.php';
+include_once '../class/Request.php';
 
-$database = new Database();
-$db = $database->getConnection();
+$request->isPost();
 
-$item = new User($db);
+try {
+    $item = new User($db);
+    $data = json_decode(file_get_contents("php://input"));
 
-$data = json_decode(file_get_contents("php://input"));
+    $item->name = $data->name;
+    $item->surname = $data->surname;
+    $item->phone = $data->phone;
+    $item->email = $data->email;
+    $item->password = $data->password;
 
-$item->name = $data->name;
-$item->surname = $data->surname;
-$item->phone = $data->phone;
-$item->email = $data->email;
-$item->password = $data->password;
-
-
-if($item->createUser()){
-    echo 'Employee created successfully.';
-} else{
-    echo 'Employee could not be created.';
+    if ($item->createUser()) {
+        $response->message("Başarılı", 200);
+    } else {
+        $response->message("could not be created.", 404);
+    }
+} catch (Exception $exception) {
+    $response->message("Bilinmeyen Bir Hata Oluştu", 500);
 }
 ?>

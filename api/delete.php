@@ -7,19 +7,24 @@ header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers
 
 include_once '../config/database.php';
 include_once '../class/users.php';
+include_once '../class/Response.php';
+include_once '../class/Request.php';
 
-$database = new Database();
-$db = $database->getConnection();
+$request->isDelete();
 
-$item = new User($db);
+try {
+    $item = new User($db);
 
-$data = json_decode(file_get_contents("php://input"));
+    $data = json_decode(file_get_contents("php://input"));
 
-$item->id = $data->id;
+    $item->id = $data->id;
 
-if($item->deleteUser()){
-    echo json_encode("Employee deleted.");
-} else{
-    echo json_encode("Data could not be deleted");
+    if ($item->deleteUser()) {
+        $response->message("Başarılı", 200);
+    } else {
+        $response->message("Başarısız", 404);
+    }
+} catch (Exception $exception) {
+    $response->message("Bilinmeyen Bir Hata Oluştu", 500);
 }
 ?>

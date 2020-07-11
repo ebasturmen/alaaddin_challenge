@@ -7,32 +7,34 @@ header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers
 
 include_once '../config/database.php';
 include_once '../class/users.php';
+include_once '../class/Response.php';
+include_once '../class/Request.php';
 
-$database = new Database();
-$db = $database->getConnection();
+$request->isPost();
 
-$item = new User($db);
+try {
+    $item = new User($db);
 
-$item->id = isset($_GET['id']) ? $_GET['id'] : die();
+    $data = json_decode(file_get_contents("php://input"));
+    $item->id = !empty($data->id) ? $data->id : die();
 
-$item->getSingleUser();
+    $item->getSingleUser();
 
-if($item->name != null){
-    // create array
-    $emp_arr = array(
-        "id" =>  $item->id,
-        "name" => $item->name,
-        "surname" => $item->surname,
-        "phone" => $item->phone,
-        "email" => $item->email
-    );
+    if ($item->name != null) {
+        // create array
+        $emp_arr = array(
+            "id" => $item->id,
+            "name" => $item->name,
+            "surname" => $item->surname,
+            "phone" => $item->phone,
+            "email" => $item->email
+        );
 
-    http_response_code(200);
-    echo json_encode($emp_arr);
-}
-
-else{
-    http_response_code(404);
-    echo json_encode("Employee not found.");
+        $response->message("Başarılı", 200, $emp_arr);
+    } else {
+        $response->message("No record found.", 404);
+    }
+} catch (Exception $exception) {
+    $response->message("Bilinmeyen Bir Hata Oluştu", 500);
 }
 ?>

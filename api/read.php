@@ -4,43 +4,42 @@ header("Content-Type: application/json; charset=UTF-8");
 
 include_once '../config/database.php';
 include_once '../class/users.php';
+include_once '../class/Response.php';
+include_once '../class/Request.php';
 
-$database = new Database();
-$db = $database->getConnection();
+$request->isPost();
 
-$items = new User($db);
+try {
 
-$stmt = $items->getUsers();
-$itemCount = $stmt->rowCount();
+    $items = new User($db);
 
+    $stmt = $items->getUsers();
+    $itemCount = $stmt->rowCount();
 
-echo json_encode($itemCount);
+    if ($itemCount > 0) {
 
-if($itemCount > 0){
+        $employeeArr = array();
+        $employeeArr["body"] = array();
+        $employeeArr["itemCount"] = $itemCount;
 
-    $employeeArr = array();
-    $employeeArr["body"] = array();
-    $employeeArr["itemCount"] = $itemCount;
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 
-    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
-        extract($row);
-        $e = array(
-            "id" => $id,
-            "name" => $name,
-            "surname" => $surname,
-            "phone" => $phone,
-            "email" => $email,
-        );
+            $e = array(
+                "id" => $row['id'],
+                "name" => $row['name'],
+                "surname" => $row['surname'],
+                "phone" => $row['phone'],
+                "email" => $row['email'],
+            );
 
-        array_push($employeeArr["body"], $e);
+            array_push($employeeArr["body"], $e);
+        }
+
+        $response->message("Başarılı", 200, $employeeArr);
+    } else {
+        $response->message("No record found.", 404);
     }
-    echo json_encode($employeeArr);
-}
 
-else{
-    http_response_code(404);
-    echo json_encode(
-        array("message" => "No record found.")
-    );
+} catch (Exception $exception) {
+    $response->message("Bilinmeyen Bir Hata Oluştu", 500);
 }
-?>
