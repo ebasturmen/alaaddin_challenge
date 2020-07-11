@@ -18,9 +18,9 @@ try {
 
     if ($itemCount > 0) {
 
-        $employeeArr = array();
-        $employeeArr["body"] = array();
-        $employeeArr["itemCount"] = $itemCount;
+        $userArr = array();
+        $userArr["body"] = array();
+        $userArr["itemCount"] = $itemCount;
 
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 
@@ -32,14 +32,14 @@ try {
                 "email" => $row['email'],
             );
 
-            array_push($employeeArr["body"], $e);
+            array_push($userArr["body"], $e);
         }
 
-        $response->message("Başarılı", 200, $employeeArr);
+        $response->message("Kayıt bulundu.", 200, $userArr);
     } else {
-        $response->message("No record found.", 404);
+        $response->message("Kayıt bulunamadı.", 404);
     }
 
 } catch (Exception $exception) {
-    $response->message("Bilinmeyen Bir Hata Oluştu", 500);
+    $response->message("Bilinmeyen bir hata oluştu", 500);
 }

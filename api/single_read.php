@@ -22,7 +22,7 @@ try {
 
     if ($item->name != null) {
         // create array
-        $emp_arr = array(
+        $user_arr = array(
             "id" => $item->id,
             "name" => $item->name,
             "surname" => $item->surname,
@@ -30,7 +30,7 @@ try {
             "email" => $item->email
         );
 
-        $response->message("Başarılı", 200, $emp_arr);
+        $response->message("Başarılı", 200, $user_arr);
     } else {
         $response->message("No record found.", 404);
     }

@@ -23,11 +23,11 @@ try {
     $item->password = $data->password;
 
     if ($item->createUser()) {
-        $response->message("Başarılı", 200);
+        $response->message("Kayıt başarıyla oluşturuldu.", 200);
     } else {
-        $response->message("could not be created.", 404);
+        $response->message("Kayıt oluşturalamadı.", 404);
     }
 } catch (Exception $exception) {
-    $response->message("Bilinmeyen Bir Hata Oluştu", 500);
+    $response->message("Bilinmeyen bir hata oluştu", 500);
 }
 ?>

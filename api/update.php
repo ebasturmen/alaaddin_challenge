@@ -24,11 +24,11 @@ try {
     $item->phone = $data->phone;
 
     if ($item->updateUser()) {
-        $response->message("Başarılı", 200);
+        $response->message("Kayıt başarıyla güncellendi.", 200);
     } else {
-        $response->message("Data could not be updated", 404);
+        $response->message("Kayıt güncelleme başarısız oldu.", 404);
     }
 } catch (Exception $exception) {
-    $response->message("Bilinmeyen Bir Hata Oluştu", 500);
+    $response->message("Bilinmeyen bir hata oluştu", 500);
 }
 ?>

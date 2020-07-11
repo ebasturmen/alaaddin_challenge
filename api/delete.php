@@ -20,11 +20,11 @@ try {
     $item->id = $data->id;
 
     if ($item->deleteUser()) {
-        $response->message("Başarılı", 200);
+        $response->message("Kayıt başarıyla silindi.", 200);
     } else {
-        $response->message("Başarısız", 404);
+        $response->message("Kayıt silme başarısız oldu.", 404);
     }
 } catch (Exception $exception) {
-    $response->message("Bilinmeyen Bir Hata Oluştu", 500);
+    $response->message("Bilinmeyen bir hata oluştu", 500);
 }
 ?>
