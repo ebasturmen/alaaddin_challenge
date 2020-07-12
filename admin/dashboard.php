@@ -49,6 +49,9 @@ else
         </div>
     </nav>
     <div class="col-12 user-list p-0 mt-4">
+        <div class="alert alert-success" id="response-message" role="alert">
+
+        </div>
         <table class="table">
             <thead class="thead-dark">
             <tr>
@@ -68,13 +71,51 @@ else
                 <td><?php echo $user['surname']?></td>
                 <td><?php echo $user['phone']?></td>
                 <td><?php echo $user['email']?></td>
-                <td><span class="material-icons">delete</span></td>
+                <td>
+                    <input type="hidden" name="user_id" id="user_id" value="<?php echo $user['id']?>">
+                    <button class="btn btn-sm btn-warning delete-button" type="button" data-toggle="modal" data-target="#delete-modal"><span style="font-size: 16px" class="material-icons">delete</span></button>
+                </td>
             </tr>
             <?php } ?>
             </tbody>
         </table>
     </div>
 </div>
+
+<!-- Modal -->
+<div class="modal fade" id="delete-modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="delete-modalLongTitle">Kullanıcı Sil</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div style="text-align: center" class="alert alert-success" id="response-message" role="alert">
+
+                </div>
+                <p>Kullanıcıyı silmek istediğinize emin misiniz?</p>
+
+            </div>
+            <div class="modal-footer">
+                <form id="delete-user-form">
+                    <input type="hidden" name="id" id="id" value="">
+                    <button type="submit" class="btn btn-primary">Evet</button>
+                </form>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Hayır</button>
+            </div>
+        </div>
+    </div>
+</div>
 <?php include "../views/partials/scripts.php";?>
+<script src="../assets/js/admin-delete.js"></script>
+<script>
+    $('.delete-button').on('click', function () {
+        var id = $(this).closest('td').find("#user_id").val();
+        $("#id").val(id);
+    });
+</script>
 </body>
 </html>
