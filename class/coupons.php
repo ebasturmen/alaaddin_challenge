@@ -8,7 +8,6 @@ class Coupons{
     public $id;
     public $code;
     public $owner_id;
-    public $status;
     public $coupon_id;
     public $user_id;
 
@@ -80,5 +79,22 @@ class Coupons{
         }
     }
 
+    /**
+     * GET COUPON INFO IF USER HAS COUPON
+     */
+    public function get_coupon()
+    {
+        $this->owner_id=htmlspecialchars(strip_tags($this->owner_id));
+
+        $sqlQuery = "SELECT * FROM " . $this->db_table ." WHERE owner_id = ?";
+        $stmt = $this->conn->prepare($sqlQuery);
+        $stmt->bindParam(1, $this->owner_id);
+        $stmt->execute();
+        $dataRow = $stmt->fetch(PDO::FETCH_ASSOC);
+        if (!empty($dataRow))
+        {
+            $this->code = $dataRow['code'];
+        }
+    }
 }
 ?>
