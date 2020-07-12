@@ -10,7 +10,7 @@ class Coupons{
     public $owner_id;
     public $coupon_id;
     public $user_id;
-
+    public $user_email;
 
     /**
      * User constructor.
@@ -47,6 +47,7 @@ class Coupons{
             $stmt->bindParam(":coupon_id", $this->coupon_id);
 
             if($stmt->execute()){
+                $this->sendMail($this->user_id);
                 return true;
             }
             return false;
@@ -54,6 +55,37 @@ class Coupons{
         else
         {
             return false;
+        }
+    }
+
+    /**
+     * SEND COUPON INFO MAIL TO USER
+     * @param $user_id
+     */
+    public function sendMail($user_id)
+    {
+        $sqlQuery = "SELECT * FROM " . $this->db_table ." WHERE owner_id=? LIMIT 0,1";
+        $stmt = $this->conn->prepare($sqlQuery);
+        $stmt->bindParam(1, $user_id);
+        $stmt->execute();
+        $dataRow = $stmt->fetch(PDO::FETCH_ASSOC);
+        if (!empty($dataRow))
+        {
+            $coupon_code = $dataRow['code'];
+            $sqlQuery = "SELECT * FROM users WHERE id = ? LIMIT 0,1";
+            $stmt = $this->conn->prepare($sqlQuery);
+            $stmt->bindParam(1, $this->id);
+            $stmt->execute();
+            $dataRow = $stmt->fetch(PDO::FETCH_ASSOC);
+            if (!empty($dataRow))
+            {
+                $email = $dataRow['email'];
+                $to_email = $email;
+                $subject = 'Alaaddin Adworks Challenge - Kupon Kodunuz';
+                $message = 'Kupon kodunuz: '.$coupon_code;
+                $headers = 'From: noreply@company.com';
+                mail($to_email,$subject,$message,$headers);
+            }
         }
     }
 
@@ -86,7 +118,7 @@ class Coupons{
     {
         $this->owner_id=htmlspecialchars(strip_tags($this->owner_id));
 
-        $sqlQuery = "SELECT * FROM " . $this->db_table ." WHERE owner_id = ?";
+        $sqlQuery = "SELECT * FROM " . $this->db_table ." WHERE owner_id = ? LIMIT 0,1";
         $stmt = $this->conn->prepare($sqlQuery);
         $stmt->bindParam(1, $this->owner_id);
         $stmt->execute();

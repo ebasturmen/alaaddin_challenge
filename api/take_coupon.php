@@ -13,7 +13,6 @@ include_once '../class/Request.php';
 $request->isPut();
 
 try {
-
     $item = new Coupons($db);
     $data = json_decode(file_get_contents("php://input"));
 
