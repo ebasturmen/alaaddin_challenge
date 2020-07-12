@@ -29,10 +29,9 @@ $couponsCount = $coupons_array->rowCount();
                 </div>
                 <div class="col-md-2 discount-code-button">
                     <?php if(isset($_SESSION['logged_in'])) { ?>
-                        <form id="take-coupon-form">
-                            <input type="hidden" name="id" id="id" value="<?php echo $coupon['id']?>">
-                            <button class="btn btn-primary btn-lg btn-block" type="submit">Kodu Alın</button>
-                        </form>
+                        <input type="hidden" name="index_id" id="index_id" value="<?php echo $coupon['id']?>">
+                        <input type="hidden" name="index_title" id="index_title" value="<?php echo $coupon['title']?>">
+                        <button type="button" class="btn btn-primary btn-lg btn-block coupon-button" data-toggle="modal" data-target="#take-coupon-modal">Kodu Alın</button>
                     <?php } else { ?>
                         <a class="btn btn-primary btn-lg btn-block" href="/sign-in.php" role="button">Kodu Alın</a>
                     <?php } ?>
@@ -42,6 +41,47 @@ $couponsCount = $coupons_array->rowCount();
         <?php } ?>
     </div>
 </div>
+
+<?php if(isset($_SESSION['logged_in'])) { ?>
+<!-- Modal -->
+<div class="modal fade" id="take-coupon-modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="take-coupon-modalLongTitle">Modal title</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div style="text-align: center" class="alert alert-success" id="response-message" role="alert">
+
+                </div>
+                <h4 style="text-align: center" id="title"></h4>
+                <form id="take-coupon-form">
+                    <input type="hidden" name="coupon_id" id="coupon_id" value="">
+                    <input type="hidden" name="user_id" id="user_id" value="<?php echo $_SESSION['id'] ?>">
+                    <button type="submit" class="btn btn-warning btn-lg btn-block mt-5 mb-2">İndirim kuponunu alın</button>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Kapat</button>
+            </div>
+        </div>
+    </div>
+</div>
+<?php } ?>
+
 <?php include "views/partials/scripts.php";?>
+<script src="assets/js/take-coupon-post.js"></script>
+<script>
+    $('.coupon-button').on('click', function () {
+        var id = $(this).closest('.discount-code-button').find("#index_id").val();
+        var title = $(this).closest('.discount-code-button').find("#index_title").val();
+
+        $("#coupon_id").val(id);
+        $("#title").text(title);
+    });
+</script>
 </body>
 </html>
