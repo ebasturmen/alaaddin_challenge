@@ -1,5 +1,7 @@
 <?php
-class Coupons{
+
+class Coupons
+{
     // Connection
     private $conn;
     // Table
@@ -10,13 +12,13 @@ class Coupons{
     public $owner_id;
     public $coupon_id;
     public $user_id;
-    public $user_email;
 
     /**
      * User constructor.
      * @param $db
      */
-    public function __construct($db){
+    public function __construct($db)
+    {
         $this->conn = $db;
     }
 
@@ -24,8 +26,9 @@ class Coupons{
      * GEL ALL CODES WHERE OWNER IS NULL
      * @return mixed
      */
-    public function getCodes(){
-        $sqlQuery = "SELECT * FROM " . $this->db_table ." WHERE owner_id IS NULL";
+    public function getCodes()
+    {
+        $sqlQuery = "SELECT * FROM " . $this->db_table . " WHERE owner_id IS NULL";
         $stmt = $this->conn->prepare($sqlQuery);
         $stmt->execute();
         return $stmt;
@@ -35,25 +38,23 @@ class Coupons{
      * USER TAKE COUPON FOR HIMSELF
      * @return mixed
      */
-    public function takeCode(){
-        $this->user_id=htmlspecialchars(strip_tags($this->user_id));
-        $this->coupon_id=htmlspecialchars(strip_tags($this->coupon_id));
-        if ($this->is_exist($this->user_id))
-        {
-            $sqlQuery = "UPDATE " . $this->db_table ." SET owner_id = :user_id, STATUS=1 WHERE id = :coupon_id";
+    public function takeCode()
+    {
+        $this->user_id = htmlspecialchars(strip_tags($this->user_id));
+        $this->coupon_id = htmlspecialchars(strip_tags($this->coupon_id));
+        if ($this->is_exist($this->user_id)) {
+            $sqlQuery = "UPDATE " . $this->db_table . " SET owner_id = :user_id, STATUS=1 WHERE id = :coupon_id";
             $stmt = $this->conn->prepare($sqlQuery);
 
             $stmt->bindParam(":user_id", $this->user_id);
             $stmt->bindParam(":coupon_id", $this->coupon_id);
 
-            if($stmt->execute()){
+            if ($stmt->execute()) {
                 $this->sendMail($this->user_id);
                 return true;
             }
             return false;
-        }
-        else
-        {
+        } else {
             return false;
         }
     }
@@ -64,27 +65,25 @@ class Coupons{
      */
     public function sendMail($user_id)
     {
-        $sqlQuery = "SELECT * FROM " . $this->db_table ." WHERE owner_id=? LIMIT 0,1";
+        $sqlQuery = "SELECT * FROM " . $this->db_table . " WHERE owner_id=? LIMIT 0,1";
         $stmt = $this->conn->prepare($sqlQuery);
         $stmt->bindParam(1, $user_id);
         $stmt->execute();
         $dataRow = $stmt->fetch(PDO::FETCH_ASSOC);
-        if (!empty($dataRow))
-        {
+        if (!empty($dataRow)) {
             $coupon_code = $dataRow['code'];
             $sqlQuery = "SELECT * FROM users WHERE id = ? LIMIT 0,1";
             $stmt = $this->conn->prepare($sqlQuery);
             $stmt->bindParam(1, $this->id);
             $stmt->execute();
             $dataRow = $stmt->fetch(PDO::FETCH_ASSOC);
-            if (!empty($dataRow))
-            {
+            if (!empty($dataRow)) {
                 $email = $dataRow['email'];
                 $to_email = $email;
                 $subject = 'Alaaddin Adworks Challenge - Kupon Kodunuz';
-                $message = 'Kupon kodunuz: '.$coupon_code;
+                $message = 'Kupon kodunuz: ' . $coupon_code;
                 $headers = 'From: noreply@company.com';
-                mail($to_email,$subject,$message,$headers);
+                mail($to_email, $subject, $message, $headers);
             }
         }
     }
@@ -96,17 +95,14 @@ class Coupons{
      */
     public function is_exist($id)
     {
-        $sqlQuery = "SELECT * FROM " . $this->db_table ." WHERE owner_id=? LIMIT 0,1";
+        $sqlQuery = "SELECT * FROM " . $this->db_table . " WHERE owner_id=? LIMIT 0,1";
         $stmt = $this->conn->prepare($sqlQuery);
         $stmt->bindParam(1, $id);
         $stmt->execute();
         $dataRow = $stmt->fetch(PDO::FETCH_ASSOC);
-        if (!empty($dataRow))
-        {
+        if (!empty($dataRow)) {
             return false;
-        }
-        else
-        {
+        } else {
             return true;
         }
     }
@@ -116,17 +112,17 @@ class Coupons{
      */
     public function get_coupon()
     {
-        $this->owner_id=htmlspecialchars(strip_tags($this->owner_id));
+        $this->owner_id = htmlspecialchars(strip_tags($this->owner_id));
 
-        $sqlQuery = "SELECT * FROM " . $this->db_table ." WHERE owner_id = ? LIMIT 0,1";
+        $sqlQuery = "SELECT * FROM " . $this->db_table . " WHERE owner_id = ? LIMIT 0,1";
         $stmt = $this->conn->prepare($sqlQuery);
         $stmt->bindParam(1, $this->owner_id);
         $stmt->execute();
         $dataRow = $stmt->fetch(PDO::FETCH_ASSOC);
-        if (!empty($dataRow))
-        {
+        if (!empty($dataRow)) {
             $this->code = $dataRow['code'];
         }
     }
 }
+
 ?>

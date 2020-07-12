@@ -10,8 +10,14 @@ include_once '../class/coupons.php';
 include_once '../class/Response.php';
 include_once '../class/Request.php';
 
+/**
+ * Check http request method;
+ */
 $request->isPut();
 
+/**
+ * User take coupon.
+ */
 try {
     $item = new Coupons($db);
     $data = json_decode(file_get_contents("php://input"));

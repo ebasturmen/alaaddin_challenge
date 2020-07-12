@@ -1,16 +1,15 @@
-$(document).ready(function() {
-    $('#register-form').submit(function(e) {
+$(document).ready(function () {
+    $('#register-form').submit(function (e) {
         e.preventDefault();
         $('#response-message').hide();
-        var form_data=JSON.stringify($(this).serializeObject());
+        var form_data = JSON.stringify($(this).serializeObject());
 
         $.ajax({
             type: "POST",
             url: 'http://localhost/api/create.php',
-            contentType : 'application/json',
+            contentType: 'application/json',
             data: form_data,
-            success: function(response)
-            {
+            success: function (response) {
                 document.getElementById('register-form').reset();
                 JSON.stringify(response);
                 $('#response-message').show();
@@ -20,11 +19,12 @@ $(document).ready(function() {
     });
 });
 
-$.fn.serializeObject = function(){
+/*to index the object*/
+$.fn.serializeObject = function () {
 
     var o = {};
     var a = this.serializeArray();
-    $.each(a, function() {
+    $.each(a, function () {
         if (o[this.name] !== undefined) {
             if (!o[this.name].push) {
                 o[this.name] = [o[this.name]];

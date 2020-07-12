@@ -7,10 +7,13 @@ if (!isset($_SESSION['logged_in'])) {
     include_once 'config/database.php';
     include_once 'class/users.php';
     include_once 'class/coupons.php';
+
+    //get user profile infos
     $user = new User($db);
     $user->id = $_SESSION['id'];
     $user->getSingleUser();
 
+    //get user coupon if has one
     $coupon = new Coupons($db);
     $coupon->owner_id = $_SESSION['id'];
     $coupon->get_coupon();

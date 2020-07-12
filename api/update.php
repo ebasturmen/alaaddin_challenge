@@ -10,15 +10,20 @@ include_once '../class/users.php';
 include_once '../class/Response.php';
 include_once '../class/Request.php';
 
+/**
+ * Check http request method;
+ */
 $request->isPut();
 
+/**
+ * Update user's infos
+ */
 try {
 
     $item = new User($db);
     $data = json_decode(file_get_contents("php://input"));
     $item->id = $data->id;
 
-// user values
     $item->name = $data->name;
     $item->surname = $data->surname;
     $item->phone = $data->phone;

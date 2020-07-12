@@ -1,23 +1,20 @@
-$(document).ready(function() {
-    $('#signin-form').submit(function(e) {
+$(document).ready(function () {
+    $('#signin-form').submit(function (e) {
         e.preventDefault();
         $('#response-message').hide();
         $.ajax({
             type: "POST",
             url: 'http://localhost/controllers/login.php',
             data: $(this).serialize(),
-            success: function(response)
-            {
+            success: function (response) {
                 var json_response = $.parseJSON(response);
-                if (json_response.status === 200)
-                {
+                if (json_response.status === 200) {
                     window.location.href = 'http://localhost/index.php';
-                }
-                else {
+                } else {
                     alert(json_response.message);
                 }
             },
-            error: function (xhr,status,error) {
+            error: function (xhr, status, error) {
 
                 var json_response = JSON.parse(xhr.responseText);
                 $('#response-message').show();

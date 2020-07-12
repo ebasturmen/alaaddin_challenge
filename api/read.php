@@ -7,23 +7,23 @@ include_once '../class/users.php';
 include_once '../class/Response.php';
 include_once '../class/Request.php';
 
+/**
+ * Check http request method;
+ */
 $request->isPost();
 
+/**
+ * Read api for getting ALL users info
+ */
 try {
-
     $items = new User($db);
-
     $stmt = $items->getUsers();
     $itemCount = $stmt->rowCount();
-
     if ($itemCount > 0) {
-
         $userArr = array();
         $userArr["body"] = array();
         $userArr["itemCount"] = $itemCount;
-
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-
             $e = array(
                 "id" => $row['id'],
                 "name" => $row['name'],
@@ -31,15 +31,12 @@ try {
                 "phone" => $row['phone'],
                 "email" => $row['email'],
             );
-
             array_push($userArr["body"], $e);
         }
-
         $response->message("Kayıt bulundu.", 200, $userArr);
     } else {
         $response->message("Kayıt bulunamadı.", 404);
     }
-
 } catch (Exception $exception) {
     $response->message("Bilinmeyen bir hata oluştu", 500);
 }

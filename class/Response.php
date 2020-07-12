@@ -2,6 +2,9 @@
 
 class Response
 {
+    /**
+     * RESPONSE STRUCTURE
+     */
     function message($message, $statusCode, $result = [], $isDie = false)
     {
         http_response_code($statusCode);
@@ -12,12 +15,10 @@ class Response
                 "result" => $result
             ]
         );
-
-        if ($isDie){
+        if ($isDie) {
             die();
         }
     }
 }
-
 
 $response = new Response();

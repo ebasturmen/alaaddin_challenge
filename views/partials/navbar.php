@@ -16,7 +16,7 @@
                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     Kullanıcı
                 </a>
-                <?php if(isset($_SESSION['logged_in'])) { ?>
+                <?php if (isset($_SESSION['logged_in'])) { ?>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                         <a class="dropdown-item" href="/profile.php">Hesabım</a>
                         <a class="dropdown-item" href="/controllers/logout.php">Kullanıcı Çıkış</a>
